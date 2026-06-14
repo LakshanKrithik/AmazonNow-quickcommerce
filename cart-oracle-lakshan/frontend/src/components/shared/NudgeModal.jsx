@@ -1,0 +1,75 @@
+// components/shared/NudgeModal.jsx - Weather alert modal overlay (from Project B)
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useCrisisStore } from "../../stores/useCrisisStore";
+import { useSystemStore } from "../../stores/useSystemStore";
+import { CloudLightning, X } from "lucide-react";
+
+export default function NudgeModal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const triggerCrisis = useCrisisStore((state) => state.triggerCrisis);
+
+  const activeNudge = useSystemStore((state) => state.activeNudge);
+  const clearNudge = useSystemStore((state) => state.clearNudge);
+
+  useEffect(() => {
+    if (activeNudge === "RAIN_CRISIS") {
+      setIsOpen(true);
+      clearNudge();
+    }
+  }, [activeNudge, clearNudge]);
+
+  const handleIntercept = () => {
+    setIsOpen(false);
+    triggerCrisis("RAIN_CRISIS", "umbrella");
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black z-50"
+            onClick={() => setIsOpen(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="fixed top-1/4 left-4 right-4 max-w-sm mx-auto bg-neutral-900 border border-neutral-800 rounded-3xl p-5 shadow-2xl z-50 text-white"
+          >
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <div className="p-3 bg-cyan-950 text-cyan-400 border border-cyan-800 rounded-2xl">
+                <CloudLightning className="w-5 h-5 animate-pulse" />
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1 text-neutral-400 hover:text-white rounded-full bg-neutral-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <h3 className="font-black text-base text-neutral-100 tracking-tight mb-1">
+              Hyperlocal Weather Alert
+            </h3>
+            <p className="text-xs text-neutral-400 leading-relaxed mb-4">
+              Severe storms approaching your area in 15 minutes. Amazon Now Hubs have staged
+              Rain Essentials Kits to bypass courier backlogs. Lock delivery path now.
+            </p>
+
+            <button
+              onClick={handleIntercept}
+              className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-neutral-950 font-extrabold text-xs rounded-xl tracking-wider uppercase transition-all duration-150"
+            >
+              Intercept Rain Bundle
+            </button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
