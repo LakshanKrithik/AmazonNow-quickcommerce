@@ -126,9 +126,12 @@ export default function TopNav() {
             <NavLink to="/" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Home</NavLink>
             <NavLink to="/cart" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Smart Cart</NavLink>
             <NavLink to="/admin" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Dashboard</NavLink>
-            <span className="px-3 py-1 text-gray-200 cursor-pointer hover:bg-white/10 rounded whitespace-nowrap">Fresh</span>
-            <span className="px-3 py-1 text-gray-200 cursor-pointer hover:bg-white/10 rounded whitespace-nowrap">Pantry</span>
-            <span className="px-3 py-1 text-gray-200 cursor-pointer hover:bg-white/10 rounded whitespace-nowrap">Pharmacy</span>
+            <NavLink to="/category/fresh" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Fresh</NavLink>
+            <NavLink to="/category/pantry" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Pantry</NavLink>
+            <NavLink to="/category/pharmacy" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Pharmacy</NavLink>
+            <NavLink to="/category/snacks-chips" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Snacks</NavLink>
+            <NavLink to="/category/cold-drinks" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Beverages</NavLink>
+            <NavLink to="/category/baby-care" className={({ isActive }) => `px-3 py-1 rounded hover:bg-white/10 whitespace-nowrap ${isActive ? 'font-bold text-white' : 'text-gray-200'}`}>Baby</NavLink>
           </div>
         </div>
       </nav>
