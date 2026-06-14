@@ -4,6 +4,7 @@ import CartPage from "./pages/CartPage"
 import AdminPage from "./pages/AdminPage"
 import TopNav from "./components/layout/TopNav"
 import VoiceAssistant from "./components/VoiceAssistant"
+import CartBar from "./components/CartBar"
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
         <VoiceAssistant />
+        <CartBar />
       </div>
     </Router>
   )
