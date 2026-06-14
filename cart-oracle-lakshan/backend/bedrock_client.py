@@ -164,3 +164,36 @@ Return only valid JSON, no other text."""
     except Exception as e:
         print(f"[BEDROCK] generate_event_based_suggestions failed: {e}")
         return None
+
+
+def classify_calendar_event(event_summary: str, event_time: str) -> dict:
+    """
+    Classify a calendar event into one of the supported intents.
+    Used by the new Google Calendar integration for Smart Cart context.
+    """
+    prompt = f"""You are an intelligent scheduling assistant for a quick commerce grocery delivery app.
+Classify the following calendar event into exactly one of these intent categories:
+HOST_GUESTS (e.g. dinner, friends over, hosting)
+PARTY (e.g. birthday, celebration, house party)
+TRAVEL (e.g. flight, train, packing, trip)
+ROUTINE (e.g. meeting, work, gym, standard events)
+
+Event Title: "{event_summary}"
+Event Time: "{event_time}"
+
+Return ONLY a JSON object:
+{{"intent": "CATEGORY_NAME", "confidence": 0.95}}
+
+Return only valid JSON, no other text."""
+
+    try:
+        result = invoke_bedrock_json(prompt, max_tokens=128)
+        if result and "intent" in result:
+            # Ensure it falls back to ROUTINE if output is weird
+            if result["intent"] not in ["HOST_GUESTS", "PARTY", "TRAVEL", "ROUTINE"]:
+                result["intent"] = "ROUTINE"
+            return result
+        return {"intent": "ROUTINE", "confidence": 0.0}
+    except Exception as e:
+        print(f"[BEDROCK] classify_calendar_event failed: {e}")
+        return {"intent": "ROUTINE", "confidence": 0.0}

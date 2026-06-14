@@ -15,14 +15,23 @@ table = dynamodb.Table('cart-oracle-users')
 
 
 def save_cart(user_id: str, cart_data: dict):
-    table.put_item(Item={
-        'user_id': user_id,
-        'cart': str(cart_data),
-        'timestamp': 'now'
-    })
-    return {"saved": True}
+    from datetime import datetime
+    try:
+        table.put_item(Item={
+            'user_id': user_id,
+            'cart': str(cart_data),
+            'timestamp': datetime.utcnow().isoformat()
+        })
+        return {"saved": True}
+    except Exception as e:
+        print(f"[DYNAMO] Failed to save cart: {e}")
+        return {"saved": False, "error": str(e)}
 
 
 def get_user_history(user_id: str):
-    response = table.get_item(Key={'user_id': user_id})
-    return response.get('Item', {})
+    try:
+        response = table.get_item(Key={'user_id': user_id})
+        return response.get('Item', {})
+    except Exception as e:
+        print(f"[DYNAMO] Failed to fetch history: {e}")
+        return {}

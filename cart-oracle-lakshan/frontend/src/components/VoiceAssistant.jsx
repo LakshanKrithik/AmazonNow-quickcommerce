@@ -109,7 +109,11 @@ export default function VoiceAssistant() {
 
   const addAllItems = () => {
     if (result?.products) {
-      result.products.forEach(p => addSingleItem(p))
+      result.products.forEach(p => {
+        if (!addedItems[p.name]) {
+          addSingleItem(p);
+        }
+      });
     }
   }
 

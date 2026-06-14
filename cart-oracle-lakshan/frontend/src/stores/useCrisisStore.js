@@ -57,9 +57,7 @@ export const useCrisisStore = create((set, get) => ({
     const cartStore = useCartStore.getState();
 
     Object.values(selectedItems).forEach(({ item, quantity }) => {
-      for (let i = 0; i < quantity; i++) {
-        cartStore.addItem(item);
-      }
+      cartStore.addItem({ ...item, qty: quantity });
     });
 
     set({ isDrawerOpen: false });
