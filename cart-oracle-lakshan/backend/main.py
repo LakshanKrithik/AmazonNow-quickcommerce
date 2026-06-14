@@ -219,31 +219,33 @@ def voice_cart(payload: dict):
 
 The user said: "{transcript}"
 
-Based on their request, generate a shopping cart with specific products they would need.
-Think carefully about the context:
-- If they mention a party, include drinks (Coca-Cola, Thums Up, Sprite), snacks (Lays, Kurkure, Haldirams namkeen), ice, disposable cups/plates, and party food
-- If they mention cooking a specific dish, include all ingredients
-- If they mention number of people, scale quantities appropriately
-- If they mention an event, think about what's needed for that event
+Generate a shopping cart with ONLY the products that are directly relevant to what the user asked for. Do NOT add random unrelated items.
+
+Guidelines:
+- ONLY suggest items that directly relate to what the user said
+- If they ask for umbrella and coffee, give umbrella, coffee, milk, sugar — NOT chips, cold drinks, or snacks unless they asked
+- If they mention a party, then include party items (drinks, snacks, ice, cups, plates)
+- If they mention cooking a dish, include only the ingredients for that dish
+- If they mention number of people, scale quantities
+- Think: "Would this item make sense given EXACTLY what they said?"
 
 Return ONLY a JSON object:
 {{
     "products": [
-        {{"name": "Product Name with brand", "quantity": 2, "price": 99, "reason": "brief reason", "delivery": "8 mins"}},
+        {{"name": "Product Name with brand", "quantity": 2, "price": 99, "reason": "brief reason directly tied to their request", "delivery": "8 mins"}},
         ...
     ],
     "summary": "one line summary of what you understood",
-    "total_items": 12
+    "total_items": 8
 }}
 
 Rules:
-- Use Indian brands (Amul, Haldirams, Lays, Coca-Cola, Thums Up, Parle, Britannia, ITC, etc.)
-- Prices in INR, realistic Indian grocery prices
-- Delivery times between 8-15 mins
-- Generate 8-15 products depending on request complexity
-- Be specific: "Coca-Cola 2L" not "soft drink", "Haldirams Aloo Bhujia 400g" not "snacks"
-- For parties: always include drinks, snacks, ice, disposable items, and some food items
-- Scale quantities for the number of people mentioned
+- Indian brands and realistic INR prices
+- Delivery times 8-15 mins
+- Generate 5-12 products — fewer is better if the request is simple
+- Be specific with names: "Nescafe Classic 200g" not "coffee"
+- Every item MUST have a clear reason tied to the user's request
+- Do NOT pad the list with unrelated items
 
 Return only valid JSON, no other text."""
 
