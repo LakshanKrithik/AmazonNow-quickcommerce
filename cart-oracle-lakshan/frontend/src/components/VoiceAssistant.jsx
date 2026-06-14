@@ -15,32 +15,11 @@ export default function VoiceAssistant() {
   const addItem = useCartStore(s => s.addItem)
 
   useEffect(() => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (SR) {
-      const rec = new SR()
-      rec.continuous = true
-      rec.lang = "en-IN"
-      rec.interimResults = true
-
-      rec.onresult = (event) => {
-        let text = ""
-        for (let i = 0; i < event.results.length; i++) {
-          text += event.results[i][0].transcript
-        }
-        setTranscript(text)
+    // Cleanup on unmount
+    return () => {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort() } catch {}
       }
-
-      rec.onerror = (event) => {
-        if (event.error === "not-allowed") {
-          setError("Microphone access denied.")
-        } else if (event.error !== "aborted") {
-          setError(`Mic error: ${event.error}`)
-        }
-        setState("error")
-      }
-
-      rec.onend = () => {}
-      recognitionRef.current = rec
     }
   }, [])
 
@@ -50,12 +29,40 @@ export default function VoiceAssistant() {
     setError("")
     setAddedItems({})
     setState("listening")
-    if (recognitionRef.current) {
-      try { recognitionRef.current.start() } catch {}
-    } else {
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SR) {
       setError("Voice not supported in this browser")
       setState("error")
+      return
     }
+
+    const rec = new SR()
+    rec.continuous = true
+    rec.lang = "en-IN"
+    rec.interimResults = true
+
+    rec.onresult = (event) => {
+      let text = ""
+      for (let i = 0; i < event.results.length; i++) {
+        text += event.results[i][0].transcript
+      }
+      setTranscript(text)
+    }
+
+    rec.onerror = (event) => {
+      if (event.error === "not-allowed") {
+        setError("Microphone access denied.")
+      } else if (event.error !== "aborted" && event.error !== "no-speech") {
+        setError(`Mic error: ${event.error}`)
+      }
+      setState("error")
+    }
+
+    rec.onend = () => {}
+
+    recognitionRef.current = rec
+    rec.start()
   }
 
   const stopListening = () => {

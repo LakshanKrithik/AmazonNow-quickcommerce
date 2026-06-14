@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import CartPage from "./pages/CartPage"
+import CheckoutPage from "./pages/CheckoutPage"
 import AdminPage from "./pages/AdminPage"
 import TopNav from "./components/layout/TopNav"
 import VoiceAssistant from "./components/VoiceAssistant"
@@ -14,6 +15,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
         <VoiceAssistant />

@@ -1,5 +1,6 @@
 // components/CartBar.jsx - Sticky checkout bar at bottom
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { ShoppingCart, ChevronUp, Clock, Plus, Minus, Trash2, X, ShieldCheck } from "lucide-react"
 import { useCartStore } from "../stores/useCartStore"
 
@@ -7,25 +8,17 @@ export default function CartBar() {
   const items = useCartStore(s => s.items)
   const updateQty = useCartStore(s => s.updateQty)
   const removeItem = useCartStore(s => s.removeItem)
-  const clearCart = useCartStore(s => s.clearCart)
   const [expanded, setExpanded] = useState(false)
-  const [ordered, setOrdered] = useState(false)
+  const navigate = useNavigate()
 
   const total = items.reduce((sum, i) => sum + (i.price * i.qty), 0)
   const count = items.reduce((sum, i) => sum + i.qty, 0)
 
   if (items.length === 0) return null
 
-  if (ordered) {
-    return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#067D62] text-white px-6 py-4 shadow-2xl">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-center gap-3">
-          <ShieldCheck className="w-5 h-5" />
-          <span className="font-semibold">Order placed! Arriving in 10 minutes</span>
-          <button onClick={() => { clearCart(); setOrdered(false); }} className="ml-4 text-sm underline">Done</button>
-        </div>
-      </div>
-    )
+  const goToCheckout = () => {
+    setExpanded(false)
+    navigate("/checkout")
   }
 
   return (
@@ -72,7 +65,7 @@ export default function CartBar() {
 
             <div className="border-t border-gray-200 px-6 py-4">
               <button
-                onClick={() => { setOrdered(true); setExpanded(false); }}
+                onClick={goToCheckout}
                 className="w-full py-4 bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] rounded-xl text-base font-bold text-[#0F1111] transition-colors"
               >
                 Checkout • ₹{total}
@@ -85,10 +78,7 @@ export default function CartBar() {
       {/* Collapsed bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
-          <button
-            onClick={() => setExpanded(true)}
-            className="flex items-center gap-3"
-          >
+          <button onClick={() => setExpanded(true)} className="flex items-center gap-3">
             <div className="relative">
               <ShoppingCart className="w-6 h-6 text-[#131921]" />
               <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#FF9900] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -108,7 +98,7 @@ export default function CartBar() {
               <span className="text-sm font-semibold">10 min</span>
             </div>
             <button
-              onClick={() => setOrdered(true)}
+              onClick={goToCheckout}
               className="px-8 py-3 bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] rounded-xl text-sm font-bold text-[#0F1111] transition-colors"
             >
               Checkout

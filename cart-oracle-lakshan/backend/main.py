@@ -215,17 +215,21 @@ def voice_cart(payload: dict):
 
     from bedrock_client import invoke_bedrock_json
 
-    prompt = f"""You are a grocery shopping assistant for a quick commerce delivery app (like Zepto/Blinkit).
+    prompt = f"""You are a grocery shopping assistant for a quick commerce delivery app in India (like Zepto/Blinkit).
 
 The user said: "{transcript}"
 
 Based on their request, generate a shopping cart with specific products they would need.
-Think about quantities realistically. Include brand names when relevant.
+Think carefully about the context:
+- If they mention a party, include drinks (Coca-Cola, Thums Up, Sprite), snacks (Lays, Kurkure, Haldirams namkeen), ice, disposable cups/plates, and party food
+- If they mention cooking a specific dish, include all ingredients
+- If they mention number of people, scale quantities appropriately
+- If they mention an event, think about what's needed for that event
 
 Return ONLY a JSON object:
 {{
     "products": [
-        {{"name": "Product Name", "quantity": 1, "price": 99, "reason": "why this item", "delivery": "8 mins"}},
+        {{"name": "Product Name with brand", "quantity": 2, "price": 99, "reason": "brief reason", "delivery": "8 mins"}},
         ...
     ],
     "summary": "one line summary of what you understood",
@@ -233,11 +237,13 @@ Return ONLY a JSON object:
 }}
 
 Rules:
-- Use Indian brands and prices in INR
-- Be specific with product names (e.g. "Amul Taaza Milk 1L" not just "Milk")
-- Include realistic delivery times (8-15 mins)
-- Generate 5-15 products depending on the request
-- Prices should be realistic Indian grocery prices
+- Use Indian brands (Amul, Haldirams, Lays, Coca-Cola, Thums Up, Parle, Britannia, ITC, etc.)
+- Prices in INR, realistic Indian grocery prices
+- Delivery times between 8-15 mins
+- Generate 8-15 products depending on request complexity
+- Be specific: "Coca-Cola 2L" not "soft drink", "Haldirams Aloo Bhujia 400g" not "snacks"
+- For parties: always include drinks, snacks, ice, disposable items, and some food items
+- Scale quantities for the number of people mentioned
 
 Return only valid JSON, no other text."""
 
