@@ -1,47 +1,42 @@
-import { CloudRain, Plane, Users, Sun, Thermometer } from "lucide-react"
+import { CloudRain, Plane, Users, Thermometer } from "lucide-react"
 
 export default function ContextBanner({ context }) {
   const weather = context.context?.weather
   const calendar = context.context?.calendar
-
   if (!weather && !calendar) return null
 
   let message = ""
   let sub = ""
-  let icon = null
-  let bgColor = "bg-[#FFF8E1]"
-  let borderColor = "border-[#FFE082]"
+  let Icon = Thermometer
+  let accent = "border-gray-200 bg-white"
 
   if (weather?.is_rainy) {
-    message = "Rainy weather outside"
-    sub = "Stay prepared with umbrellas, raincoats & comfort food"
-    icon = <CloudRain className="w-6 h-6 text-[#1565C0]" />
-    bgColor = "bg-[#E3F2FD]"
-    borderColor = "border-[#90CAF9]"
+    message = "Rain expected today"
+    sub = "Umbrellas, raincoats & warm food suggestions added"
+    Icon = CloudRain
+    accent = "border-blue-200 bg-blue-50/50"
   } else if (calendar?.intent === "TRAVEL") {
-    message = `${calendar.title}`
-    sub = `${calendar.time} — Travel essentials recommended`
-    icon = <Plane className="w-6 h-6 text-[#6A1B9A]" />
-    bgColor = "bg-[#F3E5F5]"
-    borderColor = "border-[#CE93D8]"
+    message = calendar.title
+    sub = `${calendar.time} — Travel essentials in your suggestions`
+    Icon = Plane
+    accent = "border-purple-200 bg-purple-50/50"
   } else if (calendar?.intent === "HOST_GUESTS") {
-    message = "Friends visiting tonight?"
-    sub = "Snacks, drinks and party supplies added to suggestions"
-    icon = <Users className="w-6 h-6 text-[#E65100]" />
-    bgColor = "bg-[#FFF3E0]"
-    borderColor = "border-[#FFCC80]"
+    message = "Hosting guests tonight"
+    sub = "Party snacks, drinks & supplies in your suggestions"
+    Icon = Users
+    accent = "border-orange-200 bg-orange-50/50"
   } else {
     message = `${weather?.condition}, ${weather?.temp}°C`
-    sub = `Feels like ${weather?.feels_like}°C in ${weather?.city}`
-    icon = <Thermometer className="w-6 h-6 text-[#F57C00]" />
+    sub = `${weather?.city} — suggestions based on today's weather`
+    accent = "border-gray-200 bg-white"
   }
 
   return (
-    <div className={`${bgColor} border ${borderColor} rounded-2xl px-5 py-4 mb-6 flex items-center gap-4`}>
-      <div className="shrink-0">{icon}</div>
+    <div className={`${accent} border rounded-2xl px-4 py-3.5 mb-4 flex items-center gap-3`}>
+      <Icon className="w-5 h-5 text-gray-600 shrink-0" />
       <div>
-        <p className="text-sm font-semibold text-[#131921]">{message}</p>
-        <p className="text-sm text-gray-600">{sub}</p>
+        <p className="text-sm font-semibold text-[var(--dark)]">{message}</p>
+        <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
       </div>
     </div>
   )
