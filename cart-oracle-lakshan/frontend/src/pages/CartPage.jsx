@@ -53,7 +53,29 @@ export default function CartPage() {
   const [activeMode, setActiveMode] = useState("smart")
 
   useEffect(() => {
-    loadSmartCart()
+    // Check for voice cart items first
+    const voiceItems = sessionStorage.getItem("voiceCartItems")
+    if (voiceItems) {
+      try {
+        const items = JSON.parse(voiceItems)
+        setCartItems(items.map(p => ({
+          name: p.name,
+          price: p.price,
+          delivery: p.delivery || "10 mins",
+          rating: p.rating || 4.3,
+          reason: p.reason,
+          qty: p.quantity || 1
+        })))
+        setContextMsg(`Voice cart: ${items.length} items added from your request`)
+        setActiveMode("voice")
+        sessionStorage.removeItem("voiceCartItems")
+        setLoading(false)
+      } catch {
+        loadSmartCart()
+      }
+    } else {
+      loadSmartCart()
+    }
   }, [])
 
   const loadSmartCart = async () => {

@@ -201,3 +201,59 @@ def get_time_based_cart():
     """Get a cart built from current time of day."""
     from smart_cart_builder import get_time_cart
     return get_time_cart()
+
+
+@app.post("/api/voice-cart")
+def voice_cart(payload: dict):
+    """
+    Generate a shopping cart from a natural language voice request.
+    Uses Claude Sonnet 4.5 to understand the request and suggest products.
+    """
+    transcript = payload.get("transcript", "")
+    if not transcript or len(transcript.strip()) < 3:
+        return {"success": False, "error": "Transcript too short"}
+
+    from bedrock_client import invoke_bedrock_json
+
+    prompt = f"""You are a grocery shopping assistant for a quick commerce delivery app (like Zepto/Blinkit).
+
+The user said: "{transcript}"
+
+Based on their request, generate a shopping cart with specific products they would need.
+Think about quantities realistically. Include brand names when relevant.
+
+Return ONLY a JSON object:
+{{
+    "products": [
+        {{"name": "Product Name", "quantity": 1, "price": 99, "reason": "why this item", "delivery": "8 mins"}},
+        ...
+    ],
+    "summary": "one line summary of what you understood",
+    "total_items": 12
+}}
+
+Rules:
+- Use Indian brands and prices in INR
+- Be specific with product names (e.g. "Amul Taaza Milk 1L" not just "Milk")
+- Include realistic delivery times (8-15 mins)
+- Generate 5-15 products depending on the request
+- Prices should be realistic Indian grocery prices
+
+Return only valid JSON, no other text."""
+
+    try:
+        result = invoke_bedrock_json(prompt)
+        return {"success": True, **result}
+    except Exception as e:
+        print(f"[VOICE CART] Error: {e}")
+        # Fallback
+        return {
+            "success": True,
+            "products": [
+                {"name": "Amul Taaza Milk 1L", "price": 72, "quantity": 2, "reason": "Daily essential", "delivery": "8 mins"},
+                {"name": "Britannia Bread", "price": 45, "quantity": 1, "reason": "Breakfast staple", "delivery": "8 mins"},
+                {"name": "Eggs (6 pack)", "price": 55, "quantity": 2, "reason": "Protein source", "delivery": "10 mins"},
+            ],
+            "summary": "Basic grocery essentials",
+            "total_items": 3
+        }
