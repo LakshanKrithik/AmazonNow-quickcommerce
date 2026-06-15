@@ -1,96 +1,145 @@
-# AmazonNow QuickCommerce: Cart Oracle & IntentOS 🛒⚡
+# Amazon Now
 
-Welcome to **AmazonNow**, a next-generation predictive quick commerce engine. 
+A context-aware quick commerce platform that predicts what users need before they search. The application leverages real-time signals — weather, calendar events, and time of day — to build intelligent shopping carts automatically.
 
-Most quick-commerce apps make you search for what you want. **AmazonNow predicts what you need before you even search.** By synthesizing real-world context (time of day, live weather, Google Calendar events, and purchase history), the Smart Cart proactively builds your checkout basket so you only need to confirm and pay.
-
-## 🌟 Key Features
-
-### 1. 🧠 Predictive Smart Cart
-- **Contextual Intelligence:** Automatically builds your cart based on the time of day, current weather, and your upcoming Google Calendar events.
-- **"Your Usuals":** Uses algorithms to identify your frequent purchases based on the time of day.
-- **One-Tap Checkout:** Why search for 15 items when the AI has already curated them for you?
-
-### 2. 🎙️ Voice Assistant Cart Builder
-- **Natural Language Shopping:** Tap the floating orb and say, "I'm hosting a party for 10 people tonight."
-- **AI Reasoning:** The AI uses Claude/Llama via AWS Bedrock to instantly curate a cart with soft drinks, ice, snacks, and paper plates, scaling quantities automatically.
-
-### 3. 🚨 IntentOS Crisis Routing
-- **NLP Intent Classification:** Types "power cut" and the system automatically routes you to flashlights and candles, applying surge pricing and identifying the fastest delivery routes.
-- **Dynamic Substitutions:** If a recommended item is out of stock, the ranking engine automatically suggests the next best substitute.
-
-### 4. 💬 AI Review Synthesis
-- Pulls hundreds of mock product reviews and uses AI to distill them into **Pros**, **Cons**, and a clear **Buy/Skip** verdict.
+**Live Demo:** https://main.d2qyou79awczqz.amplifyapp.com/
 
 ---
 
-## 🏗️ Architecture
+## Overview
 
-This repository is divided into two main sections:
-
-1. **`cart-oracle-lakshan/backend`**: A high-performance Python **FastAPI** backend that acts as the intelligence layer. It integrates with AWS Bedrock for AI, DynamoDB for user history, and Google Calendar for context.
-2. **`cart-oracle-lakshan/frontend`**: A gorgeous, animated **React + Vite + TailwindCSS** frontend that interfaces with the Oracle. It uses `zustand` for state management and `framer-motion` for micro-animations.
-
-*(Note: The `amazon-intent-os-main` folder contains the legacy Next.js boilerplate that was successfully ported into the FastAPI backend.)*
+Amazon Now reimagines the quick commerce experience by eliminating the need to manually search for products. The application reads contextual signals from a user's environment and proactively suggests relevant products, reducing time-to-order to a single confirmation tap.
 
 ---
 
-## 🚀 Getting Started
+## Features
+
+### Context-Aware Smart Cart
+- Real-time weather integration determines product suggestions (rain gear during storms, cold drinks during heat)
+- Google Calendar integration reads upcoming events and suggests relevant items (party supplies for gatherings, travel essentials before flights)
+- Time-of-day awareness suggests meals appropriate to the current hour (breakfast items in the morning, dinner essentials at night)
+
+### Voice Shopping Agent
+- Full-duplex voice conversation powered by Retell AI
+- Real-time transcript display during conversation
+- Live cart building — products appear in the side panel as the user speaks
+- Post-call cart editing with quantity controls before checkout
+
+### AI-Powered Search
+- Natural language search (e.g., "ingredients for chicken biryani", "snacks for a cricket party")
+- Amazon Bedrock Nova Pro interprets intent and generates product recommendations
+- Results displayed with individual or bulk add-to-cart options
+
+### Product Catalog
+- Category-based browsing (Fresh, Dairy, Snacks, Beverages, Pharmacy, Baby Care, etc.)
+- Product cards with delivery time estimates, ratings, and pricing
+- Quantity controls with real-time cart updates
+
+### Checkout
+- Full checkout flow with delivery address, payment method selection, and order summary
+- Delivery time estimation
+- Order confirmation with tracking reference
+
+---
+
+
+
+<h2>Architecture</h2>
+
+<p align="center">
+  <img src="assets/API.png" alt="Amazon Now Architecture" width="1000">
+</p>
+
+## AWS Services Used
+
+| Service | Purpose |
+|---------|---------|
+| Amazon Bedrock (Nova Pro) | AI inference for cart generation, intent classification, review synthesis, and calendar event classification |
+| Amazon DynamoDB | User data persistence and cart history storage |
+| AWS Amplify | Frontend hosting and continuous deployment |
+| AWS IAM | Secure credential management for Bedrock and DynamoDB access |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React, Vite, Tailwind CSS, Zustand, Framer Motion |
+| Backend | Python, FastAPI, Uvicorn |
+| AI/ML | Amazon Bedrock (Nova Pro), Retell AI |
+| Database | Amazon DynamoDB |
+| Weather | wttr.in (real-time, no API key required) |
+| Calendar | Google Calendar API (OAuth 2.0) |
+| Hosting | AWS Amplify (frontend), Render (backend) |
+
+---
+
+## Local Development
 
 ### Prerequisites
-- Node.js (v18+)
-- Python (v3.10+)
-- An AWS Account (for Bedrock and DynamoDB)
-- Google Cloud Console Project (for Calendar API)
+- Python 3.11+
+- Node.js 18+
+- AWS credentials with Bedrock access
+- Retell AI agent configured
 
-### 1. Backend Setup
+### Backend
 
 ```bash
-cd cart-oracle-lakshan/backend
-
-# Create a virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
+cd backend
+python -m venv venv
+venv\Scripts\activate        # Windows
 pip install -r requirements.txt
+cp .env.example .env         # Fill in credentials
+python -m uvicorn main:app --reload --port 8000
 ```
 
-**Configure Environment Variables:**
-Create a `.env` file in the `backend` directory:
-```env
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_REGION=us-east-1
-BEDROCK_MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
-```
-
-**Run the Backend:**
-```bash
-fastapi dev main.py
-```
-*The backend will run on `http://localhost:8000`.*
-
-### 2. Frontend Setup
+### Frontend
 
 ```bash
-cd cart-oracle-lakshan/frontend
-
-# Install dependencies
+cd frontend
 npm install
-
-# Start the development server
 npm run dev
 ```
-*The frontend will run on `http://localhost:5173` (or `5174`).*
+
+The application will be available at `http://localhost:5173`.
 
 ---
 
-## 🛡️ Security & Privacy Note
-This codebase interacts with real user Google Calendars and AWS infrastructure. 
-- **Never commit `.env`, `credentials.json`, or `token.json` to version control.** These are explicitly ignored via `.gitignore` to protect your privacy.
-- The DynamoDB integration includes resilient fallback logic in case your cloud infrastructure is not yet fully configured.
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| AWS_ACCESS_KEY_ID | AWS access key for Bedrock and DynamoDB |
+| AWS_SECRET_ACCESS_KEY | AWS secret key |
+| AWS_REGION | AWS region (us-east-1) |
+| BEDROCK_MODEL_ID | Bedrock model identifier (amazon.nova-pro-v1:0) |
+| RETELL_API_KEY | Retell AI platform API key |
+| RETELL_AGENT_ID | Retell AI agent identifier |
+| GOOGLE_CREDENTIALS_JSON | Google OAuth credentials (for deployed environments) |
+| GOOGLE_TOKEN_JSON | Google OAuth token (for deployed environments) |
 
 ---
 
-*Built for the future of Quick Commerce.*
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | / | Health check |
+| GET | /context | Context-aware cart prediction |
+| GET | /api/cart/weather | Weather-based cart generation |
+| GET | /api/cart/time | Time-based cart generation |
+| POST | /api/voice-cart | Natural language to cart (AI) |
+| POST | /api/intent | Voice/text intent classification |
+| POST | /api/inventory/match | Product ranking and matching |
+| POST | /api/retell/create-call | Create Retell voice call session |
+| GET | /api/predictions/{user_id} | Purchase history predictions |
+| GET | /reviews/{product_name} | AI review synthesis |
+| POST | /api/system/trigger | System event simulation |
+
+---
+
+## Team
+
+- Lakshan
+- Ajendra
