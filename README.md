@@ -47,7 +47,7 @@ Amazon Now reimagines the quick commerce experience by eliminating the need to m
 <h2>Architecture</h2>
 
 <p align="center">
-  <img src="assets/API.png" alt="Amazon Now Architecture" width="1000">
+  <img src="asset/API.png" alt="Amazon Now Architecture" width="1000">
 </p>
 
 ## AWS Services Used
