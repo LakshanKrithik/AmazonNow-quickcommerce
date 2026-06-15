@@ -1,21 +1,42 @@
 # calendar_intelligence.py - Real Google Calendar events integration
 import os
+import json
 import datetime
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from bedrock_client import classify_calendar_event
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 def get_credentials():
     creds = None
-    # The file token.json stores the user's access and refresh tokens
     current_dir = os.path.dirname(os.path.abspath(__file__))
     token_path = os.path.join(current_dir, "token.json")
     credentials_path = os.path.join(current_dir, "credentials.json")
+
+    # Try loading token from env var (for Render/production)
+    token_json_env = os.getenv("GOOGLE_TOKEN_JSON")
+    if token_json_env and not os.path.exists(token_path):
+        try:
+            with open(token_path, "w") as f:
+                f.write(token_json_env)
+        except Exception as e:
+            print(f"[CALENDAR] Failed to write token from env: {e}")
+
+    # Try loading credentials from env var (for Render/production)
+    creds_json_env = os.getenv("GOOGLE_CREDENTIALS_JSON")
+    if creds_json_env and not os.path.exists(credentials_path):
+        try:
+            with open(credentials_path, "w") as f:
+                f.write(creds_json_env)
+        except Exception as e:
+            print(f"[CALENDAR] Failed to write credentials from env: {e}")
 
     if os.path.exists(token_path):
         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
@@ -26,7 +47,7 @@ def get_credentials():
             creds.refresh(Request())
         else:
             if not os.path.exists(credentials_path):
-                print("Missing credentials.json. Please follow setup instructions.")
+                print("[CALENDAR] No credentials available. Calendar disabled.")
                 return None
             flow = InstalledAppFlow.from_client_secrets_file(
                 credentials_path, SCOPES
