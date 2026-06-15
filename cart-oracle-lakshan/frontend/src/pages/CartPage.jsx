@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { Clock, Star, ShieldCheck, Loader2, Plus, Minus, Trash2, CloudRain, Sun, Cloud, X } from "lucide-react"
-
-const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
+import { API_BASE } from "../config"
 
 const BROWSE_CATALOG = [
   { name: "Amul Taaza Milk 1L", price: 72, delivery: "8 mins", rating: 4.5, category: "Dairy" },

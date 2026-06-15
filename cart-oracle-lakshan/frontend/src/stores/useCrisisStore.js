@@ -1,8 +1,7 @@
 // stores/useCrisisStore.js - Crisis state management (from Project B)
 import { create } from 'zustand';
 import { useCartStore } from './useCartStore';
-
-const API_BASE = "https://amazonnow-quickcommerce.onrender.com";
+import { API_BASE } from '../config';
 
 export const useCrisisStore = create((set, get) => ({
   isDrawerOpen: false,

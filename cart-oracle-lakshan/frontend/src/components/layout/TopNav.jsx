@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { MapPin, Search, ShoppingCart, ChevronDown, Loader2, Plus, Check, Clock, X, User, Calendar } from 'lucide-react'
 import { useCartStore } from '../../stores/useCartStore'
-
-const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
+import { API_BASE } from '../../config'
 
 export default function TopNav() {
   const cartItems = useCartStore(s => s.items)

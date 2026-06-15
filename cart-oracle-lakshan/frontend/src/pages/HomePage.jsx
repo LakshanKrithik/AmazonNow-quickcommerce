@@ -4,8 +4,7 @@ import CategoryStrip from "../components/home/CategoryStrip"
 import ProductGrid from "../components/home/ProductGrid"
 import ContextBanner from "../components/home/ContextBanner"
 import NudgeBanner from "../components/home/NudgeBanner"
-
-const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
+import { API_BASE } from "../config"
 
 export default function HomePage() {
   const [context, setContext] = useState(null)

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import axios from "axios"
+import { API_BASE } from "../config"
 
 export default function SmartCart({ data }) {
   const { cart_prediction, recommended_products } = data
@@ -7,7 +8,7 @@ export default function SmartCart({ data }) {
   const [reviews, setReviews] = useState({})
 
   const fetchReviews = async (productName) => {
-    const res = await axios.get(`https://amazonnow-quickcommerce.onrender.com/reviews/${encodeURIComponent(productName)}`)
+    const res = await axios.get(`${API_BASE}/reviews/${encodeURIComponent(productName)}`)
     setReviews(prev => ({ ...prev, [productName]: res.data.synthesis }))
   }
 

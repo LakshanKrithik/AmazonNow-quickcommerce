@@ -3,8 +3,7 @@ import { Mic, X, Check, Plus, Phone, PhoneOff, ShoppingCart } from "lucide-react
 import { RetellWebClient } from "retell-client-js-sdk"
 import { useCartStore } from "../stores/useCartStore"
 import { useNavigate } from "react-router-dom"
-
-const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
+import { API_BASE } from "../config"
 
 export default function VoiceAssistant() {
   const [isOpen, setIsOpen] = useState(false)
