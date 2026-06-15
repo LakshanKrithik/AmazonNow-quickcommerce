@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { MapPin, Search, ShoppingCart, ChevronDown, Loader2, Plus, Check, Clock, X, User } from 'lucide-react'
+import { MapPin, Search, ShoppingCart, ChevronDown, Loader2, Plus, Check, Clock, X, User, Calendar } from 'lucide-react'
 import { useCartStore } from '../../stores/useCartStore'
 
 const API_BASE = "http://localhost:8000"
@@ -83,6 +83,33 @@ export default function TopNav() {
             <User className="w-5 h-5" />
             <span className="font-medium">Lakshan</span>
           </button>
+
+          {/* Calendar */}
+          <div className="relative group shrink-0">
+            <a
+              href="https://calendar.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-2 text-gray-600 hover:text-[var(--green)] hover:bg-[var(--green-light)] rounded-xl transition-all"
+            >
+              <Calendar className="w-5 h-5" />
+              <span className="text-sm font-medium hidden md:inline">Calendar</span>
+            </a>
+            {/* Hover tooltip */}
+            <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+              <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Upcoming Events</p>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2 p-2 bg-gray-50 rounded-lg">
+                  <div className="w-2 h-2 bg-[var(--green)] rounded-full mt-1.5 shrink-0"></div>
+                  <div>
+                    <p className="text-sm font-medium text-[var(--dark)]">No events synced</p>
+                    <p className="text-xs text-gray-500">Connect Google Calendar to see events</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-[10px] text-gray-400 mt-3 pt-2 border-t border-gray-100">Click to open Google Calendar →</p>
+            </div>
+          </div>
 
           {/* Cart */}
           <button onClick={() => navigate("/cart")} className="relative flex items-center gap-1.5 bg-[var(--green)] text-white px-4 py-2 rounded-xl hover:bg-[#0a6e1a] transition-colors shrink-0">

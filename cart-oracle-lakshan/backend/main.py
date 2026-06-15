@@ -1,8 +1,12 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from context_engine import get_context_and_cart
 from review_synthesis import synthesize_reviews
 from nudge_engine import generate_nudge_from_context, send_nudge
+
+load_dotenv()
 from dynamo_client import save_cart, get_user_history
 from mock_data import MOCK_PRODUCTS
 from ranking_engine import get_matched_products, fetch_inventory_by_category
@@ -201,6 +205,37 @@ def get_time_based_cart():
     """Get a cart built from current time of day."""
     from smart_cart_builder import get_time_cart
     return get_time_cart()
+
+
+@app.post("/api/retell/create-call")
+def create_retell_call():
+    """Create a Retell web call and return the access token."""
+    import urllib.request
+    import json as json_module
+
+    retell_api_key = os.getenv("RETELL_API_KEY", "")
+    retell_agent_id = os.getenv("RETELL_AGENT_ID", "")
+
+    if not retell_api_key or not retell_agent_id:
+        return {"success": False, "error": "Retell credentials not configured"}
+
+    try:
+        data = json_module.dumps({"agent_id": retell_agent_id}).encode("utf-8")
+        req = urllib.request.Request(
+            "https://api.retellai.com/v2/create-web-call",
+            data=data,
+            headers={
+                "Authorization": f"Bearer {retell_api_key}",
+                "Content-Type": "application/json"
+            },
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json_module.loads(resp.read().decode())
+            return {"success": True, "access_token": result.get("access_token"), "call_id": result.get("call_id")}
+    except Exception as e:
+        print(f"[RETELL] Error creating web call: {e}")
+        return {"success": False, "error": str(e)}
 
 
 @app.post("/api/voice-cart")
