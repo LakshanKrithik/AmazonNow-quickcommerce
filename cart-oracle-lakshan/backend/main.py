@@ -250,39 +250,37 @@ def voice_cart(payload: dict):
 
     from bedrock_client import invoke_bedrock_json
 
-    prompt = f"""You are a grocery shopping assistant for a quick commerce delivery app in India (like Zepto/Blinkit).
+    prompt = f"""You are a shopping assistant. The user tells you what they need and you suggest ONLY relevant products.
 
-The user said: "{transcript}"
+USER SAID: "{transcript}"
 
-Generate a shopping cart with ONLY the products that are directly relevant to what the user asked for. Do NOT add random unrelated items.
+IMPORTANT RULES:
+1. ONLY suggest products that DIRECTLY match what the user said.
+2. If user says "raining" → suggest: umbrella, raincoat, rain cover, hot soup, hot chocolate, maggi, tea, coffee. Do NOT suggest milk, bread, eggs.
+3. If user says "party" → suggest: cold drinks, chips, namkeen, ice, cups, plates, snacks.
+4. If user says "cooking biryani" → suggest: rice, chicken, spices, onion, curd, oil.
+5. If user says "breakfast" → suggest: bread, eggs, milk, butter, jam.
+6. NEVER add generic daily items unless the user specifically asked for them.
+7. Every single item must be justified by what the user said.
 
-Guidelines:
-- ONLY suggest items that directly relate to what the user said
-- If they ask for umbrella and coffee, give umbrella, coffee, milk, sugar — NOT chips, cold drinks, or snacks unless they asked
-- If they mention a party, then include party items (drinks, snacks, ice, cups, plates)
-- If they mention cooking a dish, include only the ingredients for that dish
-- If they mention number of people, scale quantities
-- Think: "Would this item make sense given EXACTLY what they said?"
+EXAMPLES:
+- "its raining outside" → umbrella, raincoat, hot chocolate, maggi, soup, tea bags, ginger, coffee
+- "party for 10 people" → Coca-Cola 2L x3, Thums Up 2L x2, Lays chips x5, Kurkure x5, ice 5kg, paper cups x50, paper plates x50
+- "i need coffee" → Nescafe Classic 200g, Amul milk 500ml, sugar 500g, coffee filter
 
-Return ONLY a JSON object:
+Now generate a cart for what the user said above.
+
+Return ONLY this JSON format:
 {{
     "products": [
-        {{"name": "Product Name with brand", "quantity": 2, "price": 99, "reason": "brief reason directly tied to their request", "delivery": "8 mins"}},
-        ...
+        {{"name": "Specific Product Name with brand", "quantity": 2, "price": 99, "reason": "why this relates to what they said", "delivery": "8 mins"}}
     ],
-    "summary": "one line summary of what you understood",
+    "summary": "what you understood from their request",
     "total_items": 8
 }}
 
-Rules:
-- Indian brands and realistic INR prices
-- Delivery times 8-15 mins
-- Generate 5-12 products — fewer is better if the request is simple
-- Be specific with names: "Nescafe Classic 200g" not "coffee"
-- Every item MUST have a clear reason tied to the user's request
-- Do NOT pad the list with unrelated items
-
-Return only valid JSON, no other text."""
+Use Indian brands (Amul, Nescafe, Bru, Lays, Kurkure, Haldirams, Coca-Cola, Thums Up, Maggi, etc).
+Prices in INR. Delivery 8-15 mins. Return ONLY valid JSON."""
 
     try:
         result = invoke_bedrock_json(prompt)
