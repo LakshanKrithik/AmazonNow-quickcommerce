@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { useCartStore } from './useCartStore';
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://amazonnow-quickcommerce.onrender.com";
 
 export const useCrisisStore = create((set, get) => ({
   isDrawerOpen: false,

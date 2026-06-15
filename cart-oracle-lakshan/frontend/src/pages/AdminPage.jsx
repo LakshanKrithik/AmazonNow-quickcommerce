@@ -2,7 +2,7 @@ import { useState } from "react"
 import { CloudRain, CheckCircle2, AlertTriangle } from "lucide-react"
 import { useSystemStore } from "../stores/useSystemStore"
 
-const API_BASE = "http://localhost:8000"
+const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
 
 export default function AdminPage() {
   const [logs, setLogs] = useState([])

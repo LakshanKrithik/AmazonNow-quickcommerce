@@ -7,7 +7,7 @@ export default function SmartCart({ data }) {
   const [reviews, setReviews] = useState({})
 
   const fetchReviews = async (productName) => {
-    const res = await axios.get(`http://localhost:8000/reviews/${encodeURIComponent(productName)}`)
+    const res = await axios.get(`https://amazonnow-quickcommerce.onrender.com/reviews/${encodeURIComponent(productName)}`)
     setReviews(prev => ({ ...prev, [productName]: res.data.synthesis }))
   }
 

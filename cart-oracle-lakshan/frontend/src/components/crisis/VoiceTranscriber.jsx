@@ -5,7 +5,7 @@ import { useSystemStore } from "../../stores/useSystemStore";
 import { Mic, MicOff, Loader2, Search, SendHorizontal, AlertCircle } from "lucide-react";
 import { useSpeechToText } from "../../hooks/useSpeechToText";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://amazonnow-quickcommerce.onrender.com";
 
 export default function VoiceTranscriber() {
   const triggerCrisis = useCrisisStore((state) => state.triggerCrisis);

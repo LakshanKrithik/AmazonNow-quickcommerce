@@ -4,7 +4,7 @@ import { RetellWebClient } from "retell-client-js-sdk"
 import { useCartStore } from "../stores/useCartStore"
 import { useNavigate } from "react-router-dom"
 
-const API_BASE = "http://localhost:8000"
+const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
 
 export default function VoiceAssistant() {
   const [isOpen, setIsOpen] = useState(false)

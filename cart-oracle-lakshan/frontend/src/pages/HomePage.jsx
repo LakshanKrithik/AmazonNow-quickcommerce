@@ -5,7 +5,7 @@ import ProductGrid from "../components/home/ProductGrid"
 import ContextBanner from "../components/home/ContextBanner"
 import NudgeBanner from "../components/home/NudgeBanner"
 
-const API_BASE = "http://localhost:8000"
+const API_BASE = "https://amazonnow-quickcommerce.onrender.com"
 
 export default function HomePage() {
   const [context, setContext] = useState(null)

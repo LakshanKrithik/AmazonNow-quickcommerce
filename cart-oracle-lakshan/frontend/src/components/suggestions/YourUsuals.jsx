@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useCrisisStore } from "../../stores/useCrisisStore";
 import { Clock, TrendingUp } from "lucide-react";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://amazonnow-quickcommerce.onrender.com";
 
 export default function YourUsuals() {
   const [suggestions, setSuggestions] = useState([]);
